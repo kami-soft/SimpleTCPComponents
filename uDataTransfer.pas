@@ -61,6 +61,7 @@ unit uDataTransfer;
   http://www.zapravila.ucoz.ru
 }
 {$I SimpleTCPComponents.inc}
+
 interface
 
 uses
@@ -84,6 +85,7 @@ type
     FCanAutoRecreateSocket: Boolean;
     FIP: string;
     FHost: string;
+    FContinueSendingAfterReconnect: Boolean;
 
     procedure CreateClientSocket;
 
@@ -115,6 +117,7 @@ type
     property OutDataCount: Integer read GetOutDataCount;
   published
     property CanAutoRecreateSocket: Boolean read FCanAutoRecreateSocket write FCanAutoRecreateSocket;
+    property ContinueSendingAfterReconnect: Boolean read FContinueSendingAfterReconnect write FContinueSendingAfterReconnect;
     property IP: string read FIP write FIP;
     property Host: string read FHost write FHost;
   end;
@@ -155,7 +158,8 @@ type
     procedure SendToAll(Data: TStream; InsertFirst: Boolean = False); overload;
 
     procedure SendToSingleConnection(ConnectionIndex: Integer; const Data; DataLength: Int64; InsertFirst: Boolean = False); overload;
-    procedure SendToSingleConnection(ConnectionIndex: Integer; const Data: string; InsertFirst: Boolean = False{$IFDEF EncodingPresented}; Encoding: TEncoding = nil{$ENDIF}); overload;
+    procedure SendToSingleConnection(ConnectionIndex: Integer; const Data: string; InsertFirst: Boolean = False{$IFDEF EncodingPresented};
+      Encoding: TEncoding = nil{$ENDIF}); overload;
     procedure SendToSingleConnection(ConnectionIndex: Integer; Data: TStream; InsertFirst: Boolean = False); overload;
 
     property Connection[index: Integer]: TCustomWinSocket read GetConnection;
@@ -170,6 +174,7 @@ procedure WriteStringToStream(const s: string; Stream: TStream{$IFDEF EncodingPr
 procedure Register;
 
 implementation
+
 uses
   Windows, WinSock;
 
@@ -179,7 +184,7 @@ begin
 end;
 
 const
-  WM_DELAYED_RECREATE_SOCKET = WM_USER + 1; //WM_USER ordered by AbstractDataTransfer
+  WM_DELAYED_RECREATE_SOCKET = WM_USER + 1; // WM_USER ordered by AbstractDataTransfer
 
 type
   { структура хранения данных для серверной стороны.
@@ -205,10 +210,10 @@ type
 
 function ReadStringFromStream(Stream: TStream{$IFDEF EncodingPresented}; Encoding: TEncoding = nil{$ENDIF}): string;
 var
-  {$IFDEF EncodingPresented}b: TBytes;{$ENDIF}
+{$IFDEF EncodingPresented}b: TBytes; {$ENDIF}
   Len: Integer;
 begin
-  {$IFDEF EncodingPresented}
+{$IFDEF EncodingPresented}
   if not Assigned(Encoding) then
     Encoding := TEncoding.UTF8;
   Stream.Read(Len, SizeOf(Integer));
@@ -216,20 +221,20 @@ begin
   if Len <> 0 then
     Stream.Read(b[0], Len);
   Result := Encoding.GetString(b);
-  {$ELSE}
+{$ELSE}
   Stream.Read(Len, SizeOf(Integer));
   SetLength(Result, Len div SizeOf(Char));
   if Len <> 0 then
     Stream.Read(Result[1], Len);
-  {$ENDIF}
+{$ENDIF}
 end;
 
 procedure WriteStringToStream(const s: string; Stream: TStream{$IFDEF EncodingPresented}; Encoding: TEncoding = nil{$ENDIF});
 var
-  {$IFDEF EncodingPresented}b: TBytes;{$ENDIF}
+{$IFDEF EncodingPresented}b: TBytes; {$ENDIF}
   Len: Integer;
 begin
-  {$IFDEF EncodingPresented}
+{$IFDEF EncodingPresented}
   if not Assigned(Encoding) then
     Encoding := TEncoding.UTF8;
   b := Encoding.GetBytes(s);
@@ -237,12 +242,12 @@ begin
   Stream.Write(Len, SizeOf(Integer));
   if Len <> 0 then
     Stream.Write(b[0], Length(b));
-  {$ELSE}
-  Len:=Length(s) * SizeOf(Char);
-  Stream.Write(Len, SizeOf(integer));
-  if Len<>0 then
+{$ELSE}
+  Len := Length(s) * SizeOf(Char);
+  Stream.Write(Len, SizeOf(Integer));
+  if Len <> 0 then
     Stream.Write(s[1], Len);
-  {$ENDIF}
+{$ENDIF}
 end;
 
 { TDataTransferClient }
@@ -340,8 +345,14 @@ begin
 
   // если нас оборвало пока мы что-то принимали,
   // нельзя чтобы принятые данные старого соединения смешивались с новыми
-  if FOutDataList.Count <> 0 then
-    TStream(FOutDataList[0]).Seek(0, {$IFDEF UseNewSeek}soBeginning{$ELSE}soFromBeginning{$ENDIF}); // поэтому последнюю передачу начинаем заново
+  if ContinueSendingAfterReconnect then
+    begin
+      if FOutDataList.Count <> 0 then
+        TStream(FOutDataList[0]).Seek(0, {$IFDEF UseNewSeek}soBeginning{$ELSE}soFromBeginning{$ENDIF});
+      // поэтому последнюю передачу начинаем заново
+    end
+  else
+    FOutDataList.Clear;
   FreeAndNil(FInStream); // а неполный последний прием уничтожаем - ничего хорошего иначе не дождемся
   // потому что пойдет смещение заголовков и данных.
 
@@ -539,7 +550,7 @@ begin
   for i := 0 to FServerSocket.Socket.ActiveConnections - 1 do
     begin
       Socket := FServerSocket.Socket.Connections[i];
-      //FreeSocketData(Socket);
+      // FreeSocketData(Socket);
       Socket.Close;
     end;
 
@@ -704,7 +715,8 @@ begin
   end;
 end;
 
-procedure TDataTransferServer.SendToSingleConnection(ConnectionIndex: Integer; const Data: string; InsertFirst: Boolean{$IFDEF EncodingPresented}; Encoding: TEncoding{$ENDIF});
+procedure TDataTransferServer.SendToSingleConnection(ConnectionIndex: Integer; const Data: string; InsertFirst: Boolean{$IFDEF EncodingPresented};
+  Encoding: TEncoding{$ENDIF});
 var
   Stream: TAbstractOutPacketStream;
 begin
