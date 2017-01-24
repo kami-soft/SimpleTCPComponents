@@ -1,4 +1,4 @@
-unit uPacketStream;
+п»їunit uPacketStream;
 {$I SimpleTCPComponents.inc}
 interface
 
@@ -8,7 +8,7 @@ uses
 type
   TPacketHeader = packed record
     DataID: integer;
-    DataSize: Int64; // размер заголовка сюда не входит !!!
+    DataSize: Int64; // СЂР°Р·РјРµСЂ Р·Р°РіРѕР»РѕРІРєР° СЃСЋРґР° РЅРµ РІС…РѕРґРёС‚ !!!
     IsHeader: boolean;
   end;
 
@@ -25,11 +25,11 @@ type
   end;
 
   TOutPacketStream = class(TAbstractOutPacketStream)
-    // этот поток предназначен для передачи
-    // пакета корреспонденту
-    // соответственно - при создании ему сообщается
-    // заголовок, метод Write записывает данные во "внутренний поток".
-    // метод Read выдает данные, считая заголовок их первой частью.
+    // СЌС‚РѕС‚ РїРѕС‚РѕРє РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РїРµСЂРµРґР°С‡Рё
+    // РїР°РєРµС‚Р° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Сѓ
+    // СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ - РїСЂРё СЃРѕР·РґР°РЅРёРё РµРјСѓ СЃРѕРѕР±С‰Р°РµС‚СЃСЏ
+    // Р·Р°РіРѕР»РѕРІРѕРє, РјРµС‚РѕРґ Write Р·Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІРѕ "РІРЅСѓС‚СЂРµРЅРЅРёР№ РїРѕС‚РѕРє".
+    // РјРµС‚РѕРґ Read РІС‹РґР°РµС‚ РґР°РЅРЅС‹Рµ, СЃС‡РёС‚Р°СЏ Р·Р°РіРѕР»РѕРІРѕРє РёС… РїРµСЂРІРѕР№ С‡Р°СЃС‚СЊСЋ.
   private
     FPos: Int64;
   strict protected
@@ -54,8 +54,8 @@ type
   end;
 
   TInPacketStream = class(TAbstractInPacketStream)
-    // здесь наоборот - запись производится начиная с заголовка
-    // и сам поток регулирует, сколько данных он "заберет" на основании
+    // Р·РґРµСЃСЊ РЅР°РѕР±РѕСЂРѕС‚ - Р·Р°РїРёСЃСЊ РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РіРѕР»РѕРІРєР°
+    // Рё СЃР°Рј РїРѕС‚РѕРє СЂРµРіСѓР»РёСЂСѓРµС‚, СЃРєРѕР»СЊРєРѕ РґР°РЅРЅС‹С… РѕРЅ "Р·Р°Р±РµСЂРµС‚" РЅР° РѕСЃРЅРѕРІР°РЅРёРё
     // DataSize
   private
     FPos: Int64;
@@ -85,18 +85,18 @@ type
 
 type
   TOutPacketStreamXML = class(TAbstractOutPacketStream)
-    // этот поток предназначен для передачи
-    // пакета корреспонденту
-    // соответственно - при создании метод Write записывает данные во "внутренний поток".
-    // метод Read выдает данные
+    // СЌС‚РѕС‚ РїРѕС‚РѕРє РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РїРµСЂРµРґР°С‡Рё
+    // РїР°РєРµС‚Р° РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚Сѓ
+    // СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ - РїСЂРё СЃРѕР·РґР°РЅРёРё РјРµС‚РѕРґ Write Р·Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІРѕ "РІРЅСѓС‚СЂРµРЅРЅРёР№ РїРѕС‚РѕРє".
+    // РјРµС‚РѕРґ Read РІС‹РґР°РµС‚ РґР°РЅРЅС‹Рµ
   public
     procedure SaveAnsiXML(XML: TXMLString);
     function Write(const Buffer; Count: Longint): Longint; override;
   end;
 
   TInPacketStreamXML = class(TAbstractInPacketStream)
-    // здесь наоборот - запись производится начиная с заголовка
-    // и сам поток регулирует, сколько данных он "заберет"
+    // Р·РґРµСЃСЊ РЅР°РѕР±РѕСЂРѕС‚ - Р·Р°РїРёСЃСЊ РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РіРѕР»РѕРІРєР°
+    // Рё СЃР°Рј РїРѕС‚РѕРє СЂРµРіСѓР»РёСЂСѓРµС‚, СЃРєРѕР»СЊРєРѕ РґР°РЅРЅС‹С… РѕРЅ "Р·Р°Р±РµСЂРµС‚"
   private
     FRootTag: TXMLString;
     FComplete: boolean;
@@ -169,12 +169,12 @@ end;
 
 procedure TOutPacketStream.LoadFromFile(const FileName: string);
 begin
-  raise EStreamError.Create('В TOutPacketStream невозможно чтение из файла');
+  raise EStreamError.Create('Р’ TOutPacketStream РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· С„Р°Р№Р»Р°');
 end;
 
 procedure TOutPacketStream.LoadFromStream(Stream: TStream);
 begin
-  raise EStreamError.Create('В TOutPacketStream невозможно чтение из потока');
+  raise EStreamError.Create('Р’ TOutPacketStream РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· РїРѕС‚РѕРєР°');
 end;
 
 function TOutPacketStream.Read(var Buffer; Count: integer): Longint;
@@ -264,17 +264,17 @@ function TInPacketStream.GetComplete: boolean;
 begin
   Result := FPos = sizeof(TPacketHeader) + FPacketHeader.DataSize;
   if FPos > (sizeof(TPacketHeader) + FPacketHeader.DataSize) then
-    raise EInOutError.Create('Ошибка при приеме пакета в сокете');
+    raise EInOutError.Create('РћС€РёР±РєР° РїСЂРё РїСЂРёРµРјРµ РїР°РєРµС‚Р° РІ СЃРѕРєРµС‚Рµ');
 end;
 
 procedure TInPacketStream.LoadFromFile(const FileName: string);
 begin
-  raise EStreamError.Create('В TInPacketStream невозможно чтение из файла');
+  raise EStreamError.Create('Р’ TInPacketStream РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· С„Р°Р№Р»Р°');
 end;
 
 procedure TInPacketStream.LoadFromStream(Stream: TStream);
 begin
-  raise EStreamError.Create('В TInPacketStream невозможно чтение из потока');
+  raise EStreamError.Create('Р’ TInPacketStream РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· РїРѕС‚РѕРєР°');
 end;
 {$IFDEF UseNewSeek}
 
@@ -282,7 +282,7 @@ function TInPacketStream.Seek(const Offset: Int64; Origin: TSeekOrigin): Int64;
 begin
   Result := 0;
   if not Complete then
-    EStreamError.Create('Невозможно изменение позиции до полного приема пакета')
+    EStreamError.Create('РќРµРІРѕР·РјРѕР¶РЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР·РёС†РёРё РґРѕ РїРѕР»РЅРѕРіРѕ РїСЂРёРµРјР° РїР°РєРµС‚Р°')
   else
     Result := inherited Seek(Offset, Origin);
 end;
@@ -292,7 +292,7 @@ function TInPacketStream.Seek(Offset: integer; Origin: Word): integer;
 begin
   Result := 0;
   if not Complete then
-    EStreamError.Create('Невозможно изменение позиции до полного приема пакета')
+    EStreamError.Create('РќРµРІРѕР·РјРѕР¶РЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР·РёС†РёРё РґРѕ РїРѕР»РЅРѕРіРѕ РїСЂРёРµРјР° РїР°РєРµС‚Р°')
   else
     Result := inherited Seek(Offset, Origin);
 end;
@@ -304,11 +304,11 @@ var
 begin
   Result := 0;
   if (Count <= 0) then
-    raise EInOutError.Create('Ошибка TInPacketStream - неверная попытка записи. Невозможно записать count=' + IntToStr(Count));
+    raise EInOutError.Create('РћС€РёР±РєР° TInPacketStream - РЅРµРІРµСЂРЅР°СЏ РїРѕРїС‹С‚РєР° Р·Р°РїРёСЃРё. РќРµРІРѕР·РјРѕР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ count=' + IntToStr(Count));
   if Complete then
     begin
-      raise EInOutError.Create('Ошибка TInPacketStream - неверная попытка записи. поток закрыт. FDataSize=' + IntToStr(FPacketHeader.DataSize) + ' FPos = ' +
-        IntToStr(FPos) + ' HeaderSize = ' + IntToStr(sizeof(TPacketHeader)) + '  пытаемся записать ' + IntToStr(Count));
+      raise EInOutError.Create('РћС€РёР±РєР° TInPacketStream - РЅРµРІРµСЂРЅР°СЏ РїРѕРїС‹С‚РєР° Р·Р°РїРёСЃРё. РїРѕС‚РѕРє Р·Р°РєСЂС‹С‚. FDataSize=' + IntToStr(FPacketHeader.DataSize) + ' FPos = ' +
+        IntToStr(FPos) + ' HeaderSize = ' + IntToStr(sizeof(TPacketHeader)) + '  РїС‹С‚Р°РµРјСЃСЏ Р·Р°РїРёСЃР°С‚СЊ ' + IntToStr(Count));
     end;
   Pb := @Buffer;
   if FPos < sizeof(TPacketHeader) then
@@ -325,7 +325,7 @@ begin
     begin
 {$IFDEF LIMIT_PACKET_SIZE}
       if FPacketHeader.DataSize > MAX_PACKET_SIZE then
-        raise EInOutError.Create('Размер пакета превышает допустимый');
+        raise EInOutError.Create('Р Р°Р·РјРµСЂ РїР°РєРµС‚Р° РїСЂРµРІС‹С€Р°РµС‚ РґРѕРїСѓСЃС‚РёРјС‹Р№');
 {$ENDIF}
       if not Complete then
         begin
@@ -362,39 +362,39 @@ begin
   iPos := myAnsiStrPos('<', str, 0, 1, LenStr);
   if iPos = -1 then
     Exit;
-  // нужно найти открывающий рут-тег. При этом - пропустить все служебные заголовки,
-  // которые имеют вид <?xml version="1.0" encoding="cp1251"?>. Кстати, заголовков может и не быть
-  // нужно задать ограничение на общий объем принимаемых данных.
-  // а то может получиться, что открываем <?, пишем белиберду и программа сваливается.
+  // РЅСѓР¶РЅРѕ РЅР°Р№С‚Рё РѕС‚РєСЂС‹РІР°СЋС‰РёР№ СЂСѓС‚-С‚РµРі. РџСЂРё СЌС‚РѕРј - РїСЂРѕРїСѓСЃС‚РёС‚СЊ РІСЃРµ СЃР»СѓР¶РµР±РЅС‹Рµ Р·Р°РіРѕР»РѕРІРєРё,
+  // РєРѕС‚РѕСЂС‹Рµ РёРјРµСЋС‚ РІРёРґ <?xml version="1.0" encoding="cp1251"?>. РљСЃС‚Р°С‚Рё, Р·Р°РіРѕР»РѕРІРєРѕРІ РјРѕР¶РµС‚ Рё РЅРµ Р±С‹С‚СЊ
+  // РЅСѓР¶РЅРѕ Р·Р°РґР°С‚СЊ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° РѕР±С‰РёР№ РѕР±СЉРµРј РїСЂРёРЅРёРјР°РµРјС‹С… РґР°РЅРЅС‹С….
+  // Р° С‚Рѕ РјРѕР¶РµС‚ РїРѕР»СѓС‡РёС‚СЊСЃСЏ, С‡С‚Рѕ РѕС‚РєСЂС‹РІР°РµРј <?, РїРёС€РµРј Р±РµР»РёР±РµСЂРґСѓ Рё РїСЂРѕРіСЂР°РјРјР° СЃРІР°Р»РёРІР°РµС‚СЃСЏ.
 
-  // пропускаем все служебные заголовки
+  // РїСЂРѕРїСѓСЃРєР°РµРј РІСЃРµ СЃР»СѓР¶РµР±РЅС‹Рµ Р·Р°РіРѕР»РѕРІРєРё
   tmpPXML := @str[iPos];
   if AnsiStrLIComp('<?', tmpPXML, 2) = 0 then
     begin
       iPos := myAnsiStrPos('?>', str, iPos, 2, LenStr);
       if iPos = -1 then
         Exit;
-      // теперь iPos указывает на закрывающие ?>
-      Inc(iPos, 2); // а теперь - на символ после ?>
+      // С‚РµРїРµСЂСЊ iPos СѓРєР°Р·С‹РІР°РµС‚ РЅР° Р·Р°РєСЂС‹РІР°СЋС‰РёРµ ?>
+      Inc(iPos, 2); // Р° С‚РµРїРµСЂСЊ - РЅР° СЃРёРјРІРѕР» РїРѕСЃР»Рµ ?>
     end;
 
   if iPos >= (LenStr - 1) then
     Exit;
 
-  // пропустили служебный заголовок, ищем root-тег
+  // РїСЂРѕРїСѓСЃС‚РёР»Рё СЃР»СѓР¶РµР±РЅС‹Р№ Р·Р°РіРѕР»РѕРІРѕРє, РёС‰РµРј root-С‚РµРі
   iPos := myAnsiStrPos('<', str, iPos, 1, LenStr);
   if iPos = -1 then
     Exit;
-  // нашли открывающий < от root - тега. Ищем закрывающий.
+  // РЅР°С€Р»Рё РѕС‚РєСЂС‹РІР°СЋС‰РёР№ < РѕС‚ root - С‚РµРіР°. РС‰РµРј Р·Р°РєСЂС‹РІР°СЋС‰РёР№.
   iPos1 := myAnsiStrPos('>', str, iPos, 1, LenStr);
   if iPos1 = -1 then
     Exit;
 
   if iPos1 = (iPos + 1) then
-    raise EInOutError.Create('Ошибка при приеме - root-тег не может быть пустым!!!');
+    raise EInOutError.Create('РћС€РёР±РєР° РїСЂРё РїСЂРёРµРјРµ - root-С‚РµРі РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!!!');
 
-  // копируем найденный root-тег во внутренний буфер
-  SetLength(Result, iPos1 - iPos + 2); // кроме закрывающего > "прогнозируем" внесение слеша
+  // РєРѕРїРёСЂСѓРµРј РЅР°Р№РґРµРЅРЅС‹Р№ root-С‚РµРі РІРѕ РІРЅСѓС‚СЂРµРЅРЅРёР№ Р±СѓС„РµСЂ
+  SetLength(Result, iPos1 - iPos + 2); // РєСЂРѕРјРµ Р·Р°РєСЂС‹РІР°СЋС‰РµРіРѕ > "РїСЂРѕРіРЅРѕР·РёСЂСѓРµРј" РІРЅРµСЃРµРЅРёРµ СЃР»РµС€Р°
   Move(str[iPos], Result[1], sizeof(TXMLChar));
   Result[2] := '/';
   Move(str[iPos + sizeof(TXMLChar)], Result[3], (iPos1 - iPos) * sizeof(TXMLChar));
@@ -422,37 +422,37 @@ begin
   iLen := (inherited Seek(0, {$IFDEF UseNewSeek}soEnd{$ELSE}soFromEnd{$ENDIF})) div sizeof(TXMLChar);
   inherited Seek(iPos, {$IFDEF UseNewSeek}soBeginning{$ELSE}soFromBeginning{$ENDIF});
 
-  if iLen < 7 then // для валидного xml документа нужно как минимум <t></t>
+  if iLen < 7 then // РґР»СЏ РІР°Р»РёРґРЅРѕРіРѕ xml РґРѕРєСѓРјРµРЅС‚Р° РЅСѓР¶РЅРѕ РєР°Рє РјРёРЅРёРјСѓРј <t></t>
     Exit;
 
   tmpBuf := Memory;
-  // пропускаем всё до открывающей <
+  // РїСЂРѕРїСѓСЃРєР°РµРј РІСЃС‘ РґРѕ РѕС‚РєСЂС‹РІР°СЋС‰РµР№ <
   if FRootTag = '' then
     FRootTag := TryGetCloseRootTag(tmpBuf, iLen);
 
   if FRootTag = '' then
     Exit;
 
-  // есть закрывающий рут-тег. Пробуем найти его
+  // РµСЃС‚СЊ Р·Р°РєСЂС‹РІР°СЋС‰РёР№ СЂСѓС‚-С‚РµРі. РџСЂРѕР±СѓРµРј РЅР°Р№С‚Рё РµРіРѕ
   iPos := myAnsiStrPos(PXMLString(FRootTag), tmpBuf, 1, Length(FRootTag), iLen);
   Result := iPos <> -1;
 end;
 
 procedure TInPacketStreamXML.LoadFromFile(const FileName: string);
 begin
-  raise EStreamError.Create('В TInPacketStreamXML невозможно чтение из файла');
+  raise EStreamError.Create('Р’ TInPacketStreamXML РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· С„Р°Р№Р»Р°');
 end;
 
 procedure TInPacketStreamXML.LoadFromStream(Stream: TStream);
 begin
-  raise EStreamError.Create('В TInPacketStreamXML невозможно чтение из потока');
+  raise EStreamError.Create('Р’ TInPacketStreamXML РЅРµРІРѕР·РјРѕР¶РЅРѕ С‡С‚РµРЅРёРµ РёР· РїРѕС‚РѕРєР°');
 end;
 {$IFDEF UseNewSeek}
 
 function TInPacketStreamXML.Seek(const Offset: Int64; Origin: TSeekOrigin): Int64;
 begin
   if not Complete then
-    raise EStreamError.Create('Невозможно изменение позиции до полного приема пакета')
+    raise EStreamError.Create('РќРµРІРѕР·РјРѕР¶РЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР·РёС†РёРё РґРѕ РїРѕР»РЅРѕРіРѕ РїСЂРёРµРјР° РїР°РєРµС‚Р°')
   else
     Result := inherited Seek(Offset, Origin);
 end;
@@ -461,7 +461,7 @@ end;
 function TInPacketStreamXML.Seek(Offset: integer; Origin: Word): integer;
 begin
   if not Complete then
-    raise EStreamError.Create('Невозможно изменение позиции до полного приема пакета')
+    raise EStreamError.Create('РќРµРІРѕР·РјРѕР¶РЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР·РёС†РёРё РґРѕ РїРѕР»РЅРѕРіРѕ РїСЂРёРµРјР° РїР°РєРµС‚Р°')
   else
     Result := inherited Seek(Offset, Origin);
 end;
@@ -478,12 +478,12 @@ begin
 
 {$IFDEF LIMIT_PACKET_SIZE}
   if iSize > MAX_PACKET_SIZE then
-    raise EInOutError.Create('Размер пакета превышает допустимый');
+    raise EInOutError.Create('Р Р°Р·РјРµСЂ РїР°РєРµС‚Р° РїСЂРµРІС‹С€Р°РµС‚ РґРѕРїСѓСЃС‚РёРјС‹Р№');
 {$ENDIF}
   if (Count <= 0) then
-    raise EInOutError.Create('Ошибка TInPacketStreamXML - неверная попытка записи');
+    raise EInOutError.Create('РћС€РёР±РєР° TInPacketStreamXML - РЅРµРІРµСЂРЅР°СЏ РїРѕРїС‹С‚РєР° Р·Р°РїРёСЃРё');
   if Complete then
-    raise EInOutError.Create('Ошибка TInPacketStreamXML - неверная попытка записи 1');
+    raise EInOutError.Create('РћС€РёР±РєР° TInPacketStreamXML - РЅРµРІРµСЂРЅР°СЏ РїРѕРїС‹С‚РєР° Р·Р°РїРёСЃРё 1');
 
   Result := inherited write(Buffer, Count);
 
@@ -511,7 +511,7 @@ function TOutPacketStreamXML.Write(const Buffer; Count: integer): Longint;
 begin
 {$IFDEF LIMIT_PACKET_SIZE}
   if (inherited Size) > MAX_PACKET_SIZE then
-    raise EInOutError.Create('Размер пакета превышает допустимый')
+    raise EInOutError.Create('Р Р°Р·РјРµСЂ РїР°РєРµС‚Р° РїСЂРµРІС‹С€Р°РµС‚ РґРѕРїСѓСЃС‚РёРјС‹Р№')
   else
 {$ENDIF}
     Result := inherited write(Buffer, Count);
