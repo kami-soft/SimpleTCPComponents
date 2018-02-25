@@ -329,7 +329,7 @@ begin
   OutDataList := GetOutDataList(Socket);
   if not Assigned(OutDataList) then
     exit;
-  Stream := nil;
+  //Stream := nil;
   while true do
     begin
       if OutDataList.Count > 0 then

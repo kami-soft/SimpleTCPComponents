@@ -121,7 +121,8 @@ implementation
 
 uses
   Windows,
-  SysUtils;
+  SysUtils,
+  System.AnsiStrings;
 
 {$IFDEF LIMIT_PACKET_SIZE}
 
@@ -344,7 +345,7 @@ begin
   iPos := FromStrPos;
   Dec(StrLen, SubStrLen - 1);
   while iPos < StrLen do
-    if AnsiStrLIComp(substr, @str[iPos], SubStrLen) = 0 then
+    if System.AnsiStrings.AnsiStrLIComp(substr, @str[iPos], SubStrLen) = 0 then
       begin
         Result := iPos;
         Break;
@@ -369,7 +370,7 @@ begin
 
   // пропускаем все служебные заголовки
   tmpPXML := @str[iPos];
-  if AnsiStrLIComp('<?', tmpPXML, 2) = 0 then
+  if System.AnsiStrings.AnsiStrLIComp('<?', tmpPXML, 2) = 0 then
     begin
       iPos := myAnsiStrPos('?>', str, iPos, 2, LenStr);
       if iPos = -1 then
